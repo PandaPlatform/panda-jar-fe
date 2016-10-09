@@ -1,3 +1,8 @@
+// Check for jQuery
+if (typeof jQuery === 'undefined') {
+    throw new Error('Panda Jar requires jQuery');
+}
+
 var Panda = Panda || {};
 Panda.Jar = Panda.Jar || {};
 

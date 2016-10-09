@@ -1,3 +1,8 @@
+// Check for jQuery
+if (typeof jQuery === 'undefined') {
+    throw new Error('Panda Jar requires jQuery');
+}
+
 var Panda = Panda || {};
 Panda.Jar = Panda.Jar || {};
 
@@ -79,7 +84,7 @@ Panda.Jar = Panda.Jar || {};
                 return pu;
             }
         },
-        submit: function (ev, jqForm, callback) {
+        submit: function (ev, jqForm) {
             // Check if form is already posting
             if (jqForm.data("posting") == true) {
                 return false;
@@ -135,18 +140,14 @@ Panda.Jar = Panda.Jar || {};
             }
 
             // Start HTMLResponse request
-            return Panda.Jar.HTMLResponse.request(jqForm.attr("action"), "POST", formData, jqForm, true, null, options).then(function () {
-                // Enable inputs again
-                jqForm.find("input[name!=''],select[name!=''],textarea[name!=''],button").prop("disabled", false).removeClass("disabled");
+            return Panda.Jar.HTMLResponse.request(jqForm.attr("action"), "POST", formData, jqForm, true, null, options)
+                .always(function () {
+                    // Enable inputs again
+                    jqForm.find("input[name!=''],select[name!=''],textarea[name!=''],button").prop("disabled", false).removeClass("disabled");
 
-                // Set posting status false
-                jqForm.data("posting", false);
-
-                // Execute custom callback (if any)
-                if (typeof callback == 'function') {
-                    callback.call(this);
-                }
-            });
+                    // Set posting status false
+                    jqForm.data("posting", false);
+                });
         },
         reset: function (ev, jqForm) {
             // Reset form
